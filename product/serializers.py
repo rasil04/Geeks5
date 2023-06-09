@@ -28,4 +28,4 @@ class ProductsReviewsSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = 'id title reviews rating'.split()
+        fields = 'id reviews rating'.split()
