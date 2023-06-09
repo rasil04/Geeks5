@@ -3,58 +3,65 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from product.models import Category, Product, Review
-from product.serializers import CategorySerializer, CategoryRetrieveSerializer, ProductSerializer, ProductRetrieveSerializer, ReviewSerializer, ReviewRetrieveSerializer
+from product.serializers import CategorySerializer, ProductSerializer, ReviewSerializer, ProductsReviewsSerializers
 
-#Get categories list
+
 @api_view(['GET'])
-def category_list_api_view(request):
-    category = Category.objects.all()
+def categories_list_api_view(request):
+    categories = Category.objects.all()
+    serializers = CategorySerializer(categories, many=True)
+    return Response(data=serializers.data)
 
-    data = CategorySerializer(category, many=True).data
 
-    return Response(data=data, status=status.HTTP_200_OK)
-
-#Get category by id
 @api_view(['GET'])
-def category_retrieve_api_view(request, **kwargs):
-    category = Category.objects.get(id=kwargs['id'])
+def categories_detail_api_view(request, id):
+    try:
+        categorie = Category.objects.get(id=id)
+    except Category.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND,
+                        data={'error': 'Object not found'})
+    serializers = CategorySerializer(categorie)
+    return Response(data=serializers.data)
 
-    data = CategoryRetrieveSerializer(category, many=False).data
 
-    return Response(data=data, status=status.HTTP_200_OK)
-
-#Get product list
 @api_view(['GET'])
-def product_list_api_view(request):
-    product = Product.objects.all()
+def products_list_api_view(request):
+    products = Product.objects.all()
+    serializers = ProductSerializer(products, many=True)
+    return Response(data=serializers.data)
 
-    data = ProductSerializer(product, many=True).data
 
-    return Response(data=data, status=status.HTTP_200_OK)
-
-#Get product by id
 @api_view(['GET'])
-def product_retrieve_api_view(request, **kwargs):
-    product = Product.objects.get(id=kwargs['id'])
+def products_detail_api_view(request, id):
+    try:
+        product1 = Product.objects.get(id=id)
+    except Product.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND,
+                        data={'error': 'Object not found'})
+    serializers = ProductSerializer(product1)
+    return Response(data=serializers.data)
 
-    data = ProductRetrieveSerializer(product, many=False).data
 
-    return Response(data=data, status=status.HTTP_200_OK)
-
-#Get review list
 @api_view(['GET'])
-def review_list_api_view(request):
-    review = Review.objects.all()
+def reviews_list_api_view(request):
+    reviews = Review.objects.all()
+    serializers = ReviewSerializer(reviews, many=True)
+    return Response(data=serializers.data)
 
-    data = ReviewSerializer(review, many=True).data
 
-    return Response(data=data, status=status.HTTP_200_OK)
-
-#Get review by id
 @api_view(['GET'])
-def review_retrieve_api_view(request, **kwargs):
-    review = Review.objects.get(id=kwargs['id'])
+def reviews_detail_api_view(request, id):
+    try:
+        review = Review.objects.get(id=id)
+    except Review.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND,
+                        data={'error': 'Object not found'})
+    serializers = ReviewSerializer(review)
+    return Response(data=serializers.data)
 
-    data = ReviewRetrieveSerializer(review, many=False).data
 
-    return Response(data=data, status=status.HTTP_200_OK)
+@api_view(['GET'])
+def products_reviews_rating_api_view(request):
+    products = Product.objects.all()
+    serializer = ProductsReviewsSerializers(products, many=True)
+    return Response(data=serializer.data)
