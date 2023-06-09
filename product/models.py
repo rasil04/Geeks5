@@ -21,6 +21,7 @@ class Product(models.Model):
     description = models.TextField()
     price = models.FloatField(default=0)
     category = models.ManyToManyField('Category', related_name='products')
+    tags = models.ManyToManyField('Tag', blank=True)
 
     @property
     def rating(self):
@@ -49,3 +50,10 @@ class Review(models.Model):
 
     def str(self):
         return self.text
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=100)
+
+    def str(self):
+        return self.name
